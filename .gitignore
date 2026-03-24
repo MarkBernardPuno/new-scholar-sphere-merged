@@ -1,6 +1,7 @@
 # Local environment secrets
 .env
 .venv/
+.venv-1/
 venv/
 backend/venv/
 

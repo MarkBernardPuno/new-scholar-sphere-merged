@@ -10,6 +10,38 @@ This repository currently contains multiple app parts, including:
 - Backend under `app/` and `database/` (from `new-scholar-sphere`)
 - Backend and frontend under `backend/` and `frontend/` (from `tip_scholarsphere`)
 
+## Quick Start In This Merged Repo
+
+### Option A: Run `new-scholar-sphere` backend (root FastAPI app)
+
+```bash
+cd /workspaces/new-scholar-sphere-merged
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
+
+### Option B: Run `tip_scholarsphere` backend and frontend
+
+Backend:
+
+```bash
+cd /workspaces/new-scholar-sphere-merged/backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload --port 8001
+```
+
+Frontend:
+
+```bash
+cd /workspaces/new-scholar-sphere-merged/frontend
+npm install
+npm run dev
+```
+
 ## Scholar Sphere API (new-scholar-sphere)
 
 FastAPI backend for authentication, user management, research records, research outputs, and integration hooks.
@@ -37,7 +69,7 @@ FastAPI backend for authentication, user management, research records, research 
 1. Clone and enter the project:
 
 ```bash
-cd /workspaces/new-scholar-sphere
+cd /workspaces/new-scholar-sphere-merged
 ```
 
 2. Create and activate a virtual environment:
@@ -170,13 +202,14 @@ Use returned bearer token on protected routes:
 ```bash
 curl http://localhost:8000/auth/me \
   -H "Authorization: Bearer <access_token>"
+```
 
 Create research evaluation (protected):
 
 ```bash
 curl -X POST http://localhost:8000/research-evaluations/ \
+  -H "Authorization: Bearer <access_token>"
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <access_token>" \
   -d '{
     "author_id": "A1,A2",
     "campus_id": 1,
@@ -192,7 +225,6 @@ curl -X POST http://localhost:8000/research-evaluations/ \
     "grammarly_report": "https://example.com/grammarly",
     "journal_conference_info": "Conference details"
   }'
-```
 ```
 
 ## Notes
