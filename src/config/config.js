@@ -1,6 +1,6 @@
 // Configuration file for API settings
 export const config = {
-  API_BASE_URL: 'https://firmamental-unicameral-kane.ngrok-free.dev',
+  API_BASE_URL: 'http://10.3.35.209:8000',
   
   // API endpoints
   endpoints: {
