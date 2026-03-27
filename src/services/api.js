@@ -22,16 +22,80 @@ const apiRequest = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(url, config_headers);
-    const data = await response.json();
+    
+    // Handle cases where response is not JSON (e.g., network errors)
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      data = { detail: `Failed to parse response: ${response.statusText}` };
+    }
 
     if (!response.ok) {
-      throw new Error(data.detail || `HTTP error! status: ${response.status}`);
+      // Enhanced error message extraction
+      let errorMessage;
+      
+      if (data) {
+        // Try different error message formats commonly used by APIs
+        if (typeof data === 'string') {
+          errorMessage = data;
+        } else if (data.detail) {
+          errorMessage = Array.isArray(data.detail) ? data.detail.join(', ') : data.detail;
+        } else if (data.message) {
+          errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+        } else if (data.error) {
+          errorMessage = typeof data.error === 'string' ? data.error : data.error.message;
+        } else if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+          // Handle validation error arrays
+          errorMessage = data.errors.map(err => 
+            typeof err === 'string' ? err : err.message || err.detail || JSON.stringify(err)
+          ).join(', ');
+        } else if (data.msg) {
+          // Some APIs use 'msg' instead of 'message'
+          errorMessage = Array.isArray(data.msg) ? data.msg.join(', ') : data.msg;
+        } else if (data.description) {
+          errorMessage = data.description;
+        } else {
+          // If it's an object, try to extract meaningful information
+          if (typeof data === 'object') {
+            // Look for any field that might contain the error message
+            const possibleErrorFields = ['error_description', 'error_message', 'errorMessage', 'reason', 'info'];
+            for (const field of possibleErrorFields) {
+              if (data[field]) {
+                errorMessage = data[field];
+                break;
+              }
+            }
+            
+            // If still no message found, create a readable summary
+            if (!errorMessage) {
+              const keys = Object.keys(data);
+              if (keys.length === 1 && data[keys[0]]) {
+                errorMessage = `${keys[0]}: ${data[keys[0]]}`;
+              } else {
+                errorMessage = `Validation error: ${JSON.stringify(data, null, 2)}`;
+              }
+            }
+          } else {
+            errorMessage = String(data);
+          }
+        }
+      } else {
+        errorMessage = `HTTP error! status: ${response.status} ${response.statusText}`;
+      }
+      
+      throw new Error(errorMessage);
     }
 
     return data;
   } catch (error) {
     console.error(`API request failed for ${endpoint}:`, error);
-    throw error;
+    // If it's already our custom error, throw it as-is
+    if (error.message) {
+      throw error;
+    }
+    // Otherwise, wrap network errors
+    throw new Error(`Network error: ${error.message || 'Unable to connect to server'}`);
   }
 };
 

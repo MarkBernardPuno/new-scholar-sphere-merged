@@ -221,7 +221,21 @@ export default function Login() {
       setView('home');
     } catch (error) {
       console.error('Login failed:', error);
-      setAuthError(error.message || 'Invalid email or password.');
+      
+      // Provide user-friendly error messages
+      let userMessage = 'Login failed. Please try again.';
+      if (error.message) {
+        if (error.message.includes('401') || error.message.includes('Unauthorized') || 
+            error.message.includes('Invalid email or password')) {
+          userMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message.includes('Network error') || error.message.includes('Unable to connect')) {
+          userMessage = 'Unable to connect to server. Please check your internet connection.';
+        } else {
+          userMessage = error.message;
+        }
+      }
+      
+      setAuthError(userMessage);
     } finally {
       setLoginLoading(false);
     }
@@ -277,7 +291,24 @@ export default function Login() {
       
     } catch (error) {
       console.error('Registration failed:', error);
-      setSignupError(error.message || 'Registration failed. Please try again.');
+      
+      // Provide user-friendly error messages for signup
+      let userMessage = 'Registration failed. Please try again.';
+      if (error.message) {
+        if (error.message.includes('422') || error.message.includes('Unprocessable')) {
+          userMessage = 'Invalid registration data. Please check all fields and try again.';
+        } else if (error.message.includes('email')) {
+          userMessage = 'Email address is already in use or invalid. Please try a different email.';
+        } else if (error.message.includes('password')) {
+          userMessage = 'Password does not meet requirements. Please try a stronger password.';
+        } else if (error.message.includes('Network error') || error.message.includes('Unable to connect')) {
+          userMessage = 'Unable to connect to server. Please check your internet connection.';
+        } else {
+          userMessage = error.message;
+        }
+      }
+      
+      setSignupError(userMessage);
     }
   };
 
@@ -285,6 +316,21 @@ export default function Login() {
     setView('landing');
     setLoginPass('');
     setShowDashboard(false);
+  };
+
+  // Enter key handlers
+  const handleLoginKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleLogin();
+    }
+  };
+
+  const handleSignupKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSignup();
+    }
   };
 
   const goToLanding = () => {
@@ -348,9 +394,11 @@ export default function Login() {
             {authError && <div style={S.errorBox}>{authError}</div>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <input style={S.inp} type="email" placeholder="Enter email"
-                value={loginEmail} onChange={e => setLoginEmail(e.target.value)} />
+                value={loginEmail} onChange={e => setLoginEmail(e.target.value)} 
+                onKeyDown={handleLoginKeyDown} />
               <input style={S.inp} type="password" placeholder="Password"
-                value={loginPass} onChange={e => setLoginPass(e.target.value)} />
+                value={loginPass} onChange={e => setLoginPass(e.target.value)} 
+                onKeyDown={handleLoginKeyDown} />
               <button 
                 style={{ 
                   ...S.submitBtn,
@@ -412,7 +460,8 @@ export default function Login() {
             {dropdownError && <div style={{ ...S.errorBox, backgroundColor: '#fef3cd', color: '#856404', borderColor: '#ffeaa7' }}>{dropdownError}</div>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <input style={S.inp} type="text" placeholder="Full Name"
-                value={fullName} onChange={e => setFullName(e.target.value)} />
+                value={fullName} onChange={e => setFullName(e.target.value)} 
+                onKeyDown={handleSignupKeyDown} />
               <div style={{ display: 'flex', gap: '10px' }}>
                 <select 
                   style={{ ...S.inp, ...S.sel, flex: 1 }} 
@@ -455,11 +504,14 @@ export default function Login() {
                 {campuses.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
               <input style={S.inp} type="email" placeholder="Your email"
-                value={signupEmail} onChange={e => setSignupEmail(e.target.value)} />
+                value={signupEmail} onChange={e => setSignupEmail(e.target.value)} 
+                onKeyDown={handleSignupKeyDown} />
               <input style={S.inp} type="password" placeholder="Password"
-                value={signupPass} onChange={e => setSignupPass(e.target.value)} />
+                value={signupPass} onChange={e => setSignupPass(e.target.value)} 
+                onKeyDown={handleSignupKeyDown} />
               <input style={S.inp} type="password" placeholder="Repeat Password"
-                value={repeatPass} onChange={e => setRepeatPass(e.target.value)} />
+                value={repeatPass} onChange={e => setRepeatPass(e.target.value)} 
+                onKeyDown={handleSignupKeyDown} />
               <button 
                 style={{ 
                   ...S.submitBtn, 

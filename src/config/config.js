@@ -1,6 +1,6 @@
 // Configuration file for API settings
 export const config = {
-  API_BASE_URL: 'http://10.3.35.209:8000',
+  API_BASE_URL: 'http://10.3.35.209:8000',  // Updated to match the actual API server
   
   // API endpoints
   endpoints: {
