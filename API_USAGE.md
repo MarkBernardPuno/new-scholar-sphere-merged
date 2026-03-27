@@ -35,7 +35,7 @@ These pages show all available endpoints, request/response formats, and allow yo
 ```http
 GET /users
 Authorization: Bearer <your_token>
-```
+````
 
 #### Example: Create a campus
 
