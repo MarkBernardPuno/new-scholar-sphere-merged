@@ -27,10 +27,10 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# URGENT CORS FIX: Hardcode frontend origin for reliability
+# UNIVERSAL CORS FOR DEVELOPMENT: Allow all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5175"],  # Exact match required for frontend
+    allow_origins=["*"],  # Allow all origins for dev/testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
