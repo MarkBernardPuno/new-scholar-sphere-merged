@@ -1,7 +1,9 @@
 import os
 
 from fastapi import FastAPI
+
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from database.database import init_schema
 from app.routes import (
@@ -46,6 +48,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Include routers
 app.include_router(auth.router)
 app.include_router(users.router)
@@ -56,18 +59,13 @@ app.include_router(lookups.router)
 app.include_router(presentations.router)
 app.include_router(integrations.router)
 
+# Serve React frontend build
+import os
+frontend_dist = os.path.join(os.path.dirname(__file__), "../frontend/dist")
+app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="static")
 
-# ======================== ROOT ENDPOINT ========================
 
-@app.get("/", tags=["Root"])
-def read_root():
-    """Welcome endpoint"""
-    return {
-        "message": "Welcome to Scholar Sphere API",
-        "version": "2.0.0",
-        "docs": "/docs"
-    }
-
+## The root endpoint is now handled by the React static files mount above.
 
 if __name__ == "__main__":
     import uvicorn
