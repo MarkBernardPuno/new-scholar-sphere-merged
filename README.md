@@ -1,19 +1,17 @@
-<<<<<<< HEAD
-# new-scholar-sphere-merged
+# Scholar Sphere (Refactored)
 
-Merged repository combining:
+This repository contains a full-stack academic research management platform.
 
-- MarkBernardPuno/new-scholar-sphere
-- qnjualonzo/tip_scholarsphere
+## Structure
 
-This repository currently contains multiple app parts, including:
+- **Backend:** FastAPI app in `app/` and database logic in `database/`
+- **Frontend:** React + Vite app in `frontend/`
+- **Tests:** All tests in `tests/`
+- **Legacy:** Old backend in `backend/` (archived, do not use)
 
-- Backend under `app/` and `database/` (from `new-scholar-sphere`)
-- Backend and frontend under `backend/` and `frontend/` (from `tip_scholarsphere`)
+## Quick Start
 
-## Quick Start In This Merged Repo
-
-### Option A: Run `new-scholar-sphere` backend (root FastAPI app)
+### Backend (FastAPI)
 
 ```bash
 cd /workspaces/new-scholar-sphere-merged
@@ -23,19 +21,7 @@ pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
 
-### Option B: Run `tip_scholarsphere` backend and frontend
-
-Backend:
-
-```bash
-cd /workspaces/new-scholar-sphere-merged/backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload --port 8001
-```
-
-Frontend:
+### Frontend (React)
 
 ```bash
 cd /workspaces/new-scholar-sphere-merged/frontend
@@ -43,9 +29,12 @@ npm install
 npm run dev
 ```
 
-## Scholar Sphere API (new-scholar-sphere)
+### Running Tests
 
-FastAPI backend for authentication, user management, research records, research outputs, and integration hooks.
+```bash
+# Backend tests (pytest required)
+pytest tests/
+```
 
 ## Features
 
@@ -59,25 +48,11 @@ FastAPI backend for authentication, user management, research records, research 
 - Pydantic validation
 - Interactive API docs
 
-## Prerequisites
+## Notes
 
-- Python 3.10+
-- PostgreSQL 12+
-- pip
-
-## Setup
-
-1. Clone and enter the project:
-
-```bash
-cd /workspaces/new-scholar-sphere-merged
-```
-
-2. Create and activate a virtual environment:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
+- All new backend code should go in `app/` and `database/`.
+- All new frontend code should go in `frontend/`.
+- The `backend/` folder is archived for reference only.
 ```
 
 3. Install dependencies:

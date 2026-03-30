@@ -1,0 +1,16 @@
+/* This file has been moved to ARCHIVE/src/styles/App.css */
+/* The original content is archived. */
+/* Please refer to the archived file for the original styles. */
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.App {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

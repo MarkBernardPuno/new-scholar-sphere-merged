@@ -1,0 +1,1 @@
+This folder contains the archived duplicate root React app and assets. Safe to delete if not needed.
